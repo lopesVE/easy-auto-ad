@@ -242,33 +242,33 @@ function Index() {
             <h2 className="mb-4 text-lg font-semibold">Veículo</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field label="Tipo">
-                <select className={inputClass} value={tipo} onChange={(e) => { setTipo(e.target.value); setMarca(""); setModelo(""); setVersao(""); }}>
+                <select className={inputClass} value={tipo} onChange={(e) => { setTipo(e.target.value); setMarca(""); setModelo(""); setAno(""); setVersao(""); }}>
                   <option value="">Selecione…</option>
                   {TIPOS.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </Field>
               <Field label="Marca">
-                <select className={inputClass} value={marca} disabled={!marcas.length} onChange={(e) => { setMarca(e.target.value); setModelo(""); setVersao(""); }}>
+                <select className={inputClass} value={marca} disabled={!marcas.length} onChange={(e) => { setMarca(e.target.value); setModelo(""); setAno(""); setVersao(""); }}>
                   <option value="">Selecione…</option>
                   {marcas.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
               </Field>
               <Field label="Modelo">
-                <select className={inputClass} value={modelo} disabled={!modelos.length} onChange={(e) => { setModelo(e.target.value); setVersao(""); }}>
+                <select className={inputClass} value={modelo} disabled={!modelos.length} onChange={(e) => { setModelo(e.target.value); setAno(""); setVersao(""); }}>
                   <option value="">Selecione…</option>
                   {modelos.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
               </Field>
-              <Field label="Versão">
-                <select className={inputClass} value={versao} disabled={!versoes.length} onChange={(e) => setVersao(e.target.value)}>
+              <Field label="Ano">
+                <select className={inputClass} value={ano} disabled={!anosDisponiveis.length} onChange={(e) => { setAno(e.target.value); setVersao(""); }}>
                   <option value="">Selecione…</option>
-                  {versoes.map((v) => <option key={v} value={v}>{v}</option>)}
+                  {anosDisponiveis.map((a) => <option key={a} value={a}>{a === String(ANO_HOJE) ? `${a} (hoje)` : a}</option>)}
                 </select>
               </Field>
-              <Field label="Ano">
-                <select className={inputClass} value={ano} onChange={(e) => setAno(e.target.value)}>
+              <Field label="Versão">
+                <select className={inputClass} value={versao} disabled={!versoesDisponiveis.length} onChange={(e) => setVersao(e.target.value)}>
                   <option value="">Selecione…</option>
-                  {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
+                  {versoesDisponiveis.map((vv) => <option key={vv} value={vv}>{vv}</option>)}
                 </select>
               </Field>
               <Field label="Quilometragem">
