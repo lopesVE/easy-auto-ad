@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
 
 const TIPOS = ["Carro", "Moto", "Caminhonete/SUV", "Jet Ski", "Outro"];
 const CAMBIOS = ["Automático", "CVT", "Manual", "Automatizado", "Dual Clutch (DCT)"];
-const ANOS = Array.from({ length: 2027 - 1960 + 1 }, (_, i) => String(2027 - i));
+const ANOS_FALLBACK = Array.from({ length: ANO_HOJE + 2 - 1960 + 1 }, (_, i) => String(ANO_HOJE + 2 - i));
 
 type Section = { title: string; emoji: string; items: string[] };
 
