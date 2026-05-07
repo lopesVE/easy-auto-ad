@@ -138,9 +138,19 @@ function Index() {
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const marcas = useMemo(() => Object.keys(VEHICLES[tipo] ?? {}), [tipo]);
-  const modelos = useMemo(() => Object.keys(VEHICLES[tipo]?.[marca] ?? {}), [tipo, marca]);
-  const versoes = useMemo(() => VEHICLES[tipo]?.[marca]?.[modelo] ?? [], [tipo, marca, modelo]);
+  const marcas = useMemo(() => getMarcas(tipo), [tipo]);
+  const modelos = useMemo(() => getModelos(tipo, marca), [tipo, marca]);
+  const modeloEntry = useMemo(() => getModeloEntry(tipo, marca, modelo), [tipo, marca, modelo]);
+  const anosDisponiveis = useMemo(() => {
+    if (modeloEntry) return anosDoModelo(modeloEntry);
+    if (!isStructured(tipo) && tipo) return ANOS_FALLBACK;
+    return [];
+  }, [modeloEntry, tipo]);
+  const versoesDisponiveis = useMemo(() => {
+    if (modeloEntry && ano) return versoesNoAno(modeloEntry, Number(ano));
+    if (!isStructured(tipo) && tipo && marca && modelo) return versoesSimples(tipo, marca, modelo);
+    return [];
+  }, [modeloEntry, ano, tipo, marca, modelo]);
 
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, item: string) => {
     const next = new Set(set);
