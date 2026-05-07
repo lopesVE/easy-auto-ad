@@ -1,6 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { VEHICLES, CONFORTO, TECNOLOGIA, SEGURANCA, EXTRAS } from "@/data/vehicles";
+import {
+  CONFORTO, TECNOLOGIA, SEGURANCA, EXTRAS,
+  VEHICLES, VEHICLES_SIMPLE,
+  isStructured, getMarcas, getModelos, getModeloEntry,
+  anosDoModelo, versoesNoAno, versoesSimples, ANO_HOJE,
+} from "@/data/vehicles";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -14,7 +19,7 @@ export const Route = createFileRoute("/")({
 
 const TIPOS = ["Carro", "Moto", "Caminhonete/SUV", "Jet Ski", "Outro"];
 const CAMBIOS = ["Automático", "CVT", "Manual", "Automatizado", "Dual Clutch (DCT)"];
-const ANOS = Array.from({ length: 2027 - 1960 + 1 }, (_, i) => String(2027 - i));
+const ANOS_FALLBACK = Array.from({ length: ANO_HOJE + 2 - 1960 + 1 }, (_, i) => String(ANO_HOJE + 2 - i));
 
 type Section = { title: string; emoji: string; items: string[] };
 
@@ -133,9 +138,19 @@ function Index() {
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const marcas = useMemo(() => Object.keys(VEHICLES[tipo] ?? {}), [tipo]);
-  const modelos = useMemo(() => Object.keys(VEHICLES[tipo]?.[marca] ?? {}), [tipo, marca]);
-  const versoes = useMemo(() => VEHICLES[tipo]?.[marca]?.[modelo] ?? [], [tipo, marca, modelo]);
+  const marcas = useMemo(() => getMarcas(tipo), [tipo]);
+  const modelos = useMemo(() => getModelos(tipo, marca), [tipo, marca]);
+  const modeloEntry = useMemo(() => getModeloEntry(tipo, marca, modelo), [tipo, marca, modelo]);
+  const anosDisponiveis = useMemo(() => {
+    if (modeloEntry) return anosDoModelo(modeloEntry);
+    if (!isStructured(tipo) && tipo) return ANOS_FALLBACK;
+    return [];
+  }, [modeloEntry, tipo]);
+  const versoesDisponiveis = useMemo(() => {
+    if (modeloEntry && ano) return versoesNoAno(modeloEntry, Number(ano));
+    if (!isStructured(tipo) && tipo && marca && modelo) return versoesSimples(tipo, marca, modelo);
+    return [];
+  }, [modeloEntry, ano, tipo, marca, modelo]);
 
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, item: string) => {
     const next = new Set(set);
@@ -227,33 +242,33 @@ function Index() {
             <h2 className="mb-4 text-lg font-semibold">Veículo</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field label="Tipo">
-                <select className={inputClass} value={tipo} onChange={(e) => { setTipo(e.target.value); setMarca(""); setModelo(""); setVersao(""); }}>
+                <select className={inputClass} value={tipo} onChange={(e) => { setTipo(e.target.value); setMarca(""); setModelo(""); setAno(""); setVersao(""); }}>
                   <option value="">Selecione…</option>
                   {TIPOS.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </Field>
               <Field label="Marca">
-                <select className={inputClass} value={marca} disabled={!marcas.length} onChange={(e) => { setMarca(e.target.value); setModelo(""); setVersao(""); }}>
+                <select className={inputClass} value={marca} disabled={!marcas.length} onChange={(e) => { setMarca(e.target.value); setModelo(""); setAno(""); setVersao(""); }}>
                   <option value="">Selecione…</option>
                   {marcas.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
               </Field>
               <Field label="Modelo">
-                <select className={inputClass} value={modelo} disabled={!modelos.length} onChange={(e) => { setModelo(e.target.value); setVersao(""); }}>
+                <select className={inputClass} value={modelo} disabled={!modelos.length} onChange={(e) => { setModelo(e.target.value); setAno(""); setVersao(""); }}>
                   <option value="">Selecione…</option>
                   {modelos.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
               </Field>
-              <Field label="Versão">
-                <select className={inputClass} value={versao} disabled={!versoes.length} onChange={(e) => setVersao(e.target.value)}>
+              <Field label="Ano">
+                <select className={inputClass} value={ano} disabled={!anosDisponiveis.length} onChange={(e) => { setAno(e.target.value); setVersao(""); }}>
                   <option value="">Selecione…</option>
-                  {versoes.map((v) => <option key={v} value={v}>{v}</option>)}
+                  {anosDisponiveis.map((a) => <option key={a} value={a}>{a === String(ANO_HOJE) ? `${a} (hoje)` : a}</option>)}
                 </select>
               </Field>
-              <Field label="Ano">
-                <select className={inputClass} value={ano} onChange={(e) => setAno(e.target.value)}>
+              <Field label="Versão">
+                <select className={inputClass} value={versao} disabled={!versoesDisponiveis.length} onChange={(e) => setVersao(e.target.value)}>
                   <option value="">Selecione…</option>
-                  {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
+                  {versoesDisponiveis.map((vv) => <option key={vv} value={vv}>{vv}</option>)}
                 </select>
               </Field>
               <Field label="Quilometragem">
