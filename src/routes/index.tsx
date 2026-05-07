@@ -1,6 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { VEHICLES, CONFORTO, TECNOLOGIA, SEGURANCA, EXTRAS } from "@/data/vehicles";
+import {
+  CONFORTO, TECNOLOGIA, SEGURANCA, EXTRAS,
+  VEHICLES, VEHICLES_SIMPLE,
+  isStructured, getMarcas, getModelos, getModeloEntry,
+  anosDoModelo, versoesNoAno, versoesSimples, ANO_HOJE,
+} from "@/data/vehicles";
 
 export const Route = createFileRoute("/")({
   component: Index,
