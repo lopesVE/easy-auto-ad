@@ -24,25 +24,29 @@ const ANOS_FALLBACK = Array.from({ length: ANO_HOJE + 2 - 1960 + 1 }, (_, i) => 
 type Section = { title: string; emoji: string; items: string[] };
 
 function CheckCard({
-  label, checked, onToggle,
-}: { label: string; checked: boolean; onToggle: () => void }) {
+  label, checked, onToggle, disabled,
+}: { label: string; checked: boolean; onToggle: () => void; disabled?: boolean }) {
   return (
     <button
       type="button"
-      onClick={onToggle}
+      onClick={() => { if (!disabled) onToggle(); }}
+      disabled={disabled}
+      aria-disabled={disabled}
       className={`group relative flex items-center gap-2 rounded-lg border px-3 py-2.5 text-left text-sm transition-all ${
-        checked
+        disabled
+          ? "border-[var(--border)] bg-[var(--surface)] line-through opacity-35 cursor-not-allowed"
+          : checked
           ? "border-transparent bg-[var(--surface-2)] shadow-[var(--shadow-glow)]"
           : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)]/50"
       }`}
-      style={checked ? { borderImage: "var(--gradient-accent) 1", borderColor: "var(--accent)" } : undefined}
+      style={!disabled && checked ? { borderImage: "var(--gradient-accent) 1", borderColor: "var(--accent)" } : undefined}
     >
       <span
         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
-          checked ? "gradient-accent border-transparent" : "border-[var(--border)] bg-[var(--background)]"
+          !disabled && checked ? "gradient-accent border-transparent" : "border-[var(--border)] bg-[var(--background)]"
         }`}
       >
-        {checked && (
+        {!disabled && checked && (
           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-black" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -51,6 +55,19 @@ function CheckCard({
       <span className="leading-tight">{label}</span>
     </button>
   );
+}
+
+const AIRBAG_GROUP = ["6 airbags", "4 airbags", "2 airbags"];
+function isAirbagDisabled(item: string, selected: Set<string>) {
+  if (!AIRBAG_GROUP.includes(item)) return false;
+  if (selected.has(item)) return false;
+  return AIRBAG_GROUP.some((a) => a !== item && selected.has(a));
+}
+
+function formatBR(raw: string) {
+  const digits = raw.replace(/\D/g, "");
+  if (!digits) return "";
+  return Number(digits).toLocaleString("pt-BR");
 }
 
 function Field({
