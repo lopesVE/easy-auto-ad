@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Gerador de descrição de anúncio" },
+      { name: "description", content: "SIte utilizado para gerar descrições de anúncios veiculares" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Gerador de descrição de anúncio" },
+      { property: "og:description", content: "SIte utilizado para gerar descrições de anúncios veiculares" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Gerador de descrição de anúncio" },
+      { name: "twitter:description", content: "SIte utilizado para gerar descrições de anúncios veiculares" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/08b3e823-8d2d-4484-ba3d-43df3328f03c/id-preview-e80506ab--766f77ee-358f-45a4-9454-c882eb7c9e18.lovable.app-1778194751994.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/08b3e823-8d2d-4484-ba3d-43df3328f03c/id-preview-e80506ab--766f77ee-358f-45a4-9454-c882eb7c9e18.lovable.app-1778194751994.png" },
     ],
     links: [
       {
