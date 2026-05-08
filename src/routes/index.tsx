@@ -296,10 +296,10 @@ function Index() {
                 </select>
               </Field>
               <Field label="Quilometragem">
-                <input className={inputClass} value={km} onChange={(e) => setKm(e.target.value)} placeholder="Ex: 45.000" />
+                <input className={inputClass} value={km} inputMode="numeric" onChange={(e) => setKm(formatBR(e.target.value))} placeholder="Ex: 45.000" />
               </Field>
               <Field label="Valor R$">
-                <input className={inputClass} value={valor} onChange={(e) => setValor(e.target.value)} placeholder="Ex: 89.900" />
+                <input className={inputClass} value={valor} inputMode="numeric" onChange={(e) => setValor(formatBR(e.target.value))} placeholder="Ex: 89.900" />
               </Field>
               <Field label="Motorização">
                 <input className={inputClass} value={motor} onChange={(e) => setMotor(e.target.value)} placeholder="Ex: 1.0 Turbo Flex" />
