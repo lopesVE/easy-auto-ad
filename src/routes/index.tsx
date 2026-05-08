@@ -333,6 +333,7 @@ function Index() {
             selected={seguranca} custom={segCustom}
             onToggle={(i) => toggle(seguranca, setSeguranca, i)}
             onAddCustom={(i) => addCustom(segCustom, setSegCustom, seguranca, setSeguranca, i)}
+            isItemDisabled={(i) => isAirbagDisabled(i, seguranca)}
           />
           <CheckSection
             title="Extras" emoji="🗝️" base={EXTRAS}
