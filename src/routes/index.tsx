@@ -85,12 +85,13 @@ const inputClass =
   "w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/30";
 
 function CheckSection({
-  title, emoji, base, selected, custom, onToggle, onAddCustom,
+  title, emoji, base, selected, custom, onToggle, onAddCustom, isItemDisabled,
 }: {
   title: string; emoji: string; base: string[];
   selected: Set<string>; custom: string[];
   onToggle: (item: string) => void;
   onAddCustom: (item: string) => void;
+  isItemDisabled?: (item: string) => boolean;
 }) {
   const [text, setText] = useState("");
   const all = [...base, ...custom];
@@ -107,7 +108,13 @@ function CheckSection({
       </h3>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {all.map((item) => (
-          <CheckCard key={item} label={item} checked={selected.has(item)} onToggle={() => onToggle(item)} />
+          <CheckCard
+            key={item}
+            label={item}
+            checked={selected.has(item)}
+            onToggle={() => onToggle(item)}
+            disabled={isItemDisabled?.(item)}
+          />
         ))}
       </div>
       <div className="mt-4 flex gap-2">
